@@ -30,6 +30,8 @@ fn nro_main(nro: &NroInfo) {
 #[skyline::hook(replace = smash::lua2cpp::L2CFighterCommon_sys_line_system_control_fighter)]
 pub unsafe fn sys_line_system_control_fighter_hook(fighter: &mut L2CFighterCommon) -> L2CValue {
     let boma = sv_system::battle_object_module_accessor(fighter.lua_state_agent);
+    let mut l2c_agent = L2CAgent::new(fighter.lua_state_agent);
+    let lua_state = fighter.lua_state_agent;
     let battle_object_category = get_category(boma);
 
 
@@ -38,8 +40,7 @@ pub unsafe fn sys_line_system_control_fighter_hook(fighter: &mut L2CFighterCommo
         let situation_kind = StatusModule::situation_kind(boma);
         let curr_frame = MotionModule::frame(boma);
         let fighter_kind = get_kind(boma);
-        momentum_transfer::momentum_transfer_helper(boma, status_kind);
-        momentum_transfer::momentum_transfer_additional(boma, status_kind, situation_kind, curr_frame, fighter_kind);
+        momentum_transfer::momentum_transfer_helper(lua_state, &mut l2c_agent, boma, status_kind, situation_kind, curr_frame, fighter_kind);
     }
     original!()(fighter)
 }
@@ -48,4 +49,5 @@ pub unsafe fn sys_line_system_control_fighter_hook(fighter: &mut L2CFighterCommo
 #[skyline::main(name = "MomentumTransfer")]
 pub fn main() {
     nro::add_hook(nro_main).unwrap();
+    skyline::install_hook!(momentum_transfer::change_kinetic_hook);
 }
