@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["__custom_fini",""],["__custom_init",""],["main",""],["sys_line_system_control_fighter_hook",""],["sys_line_system_control_fighter_hook_skyline_internal_install_hook",""]],"static":[["__MODULE_NAME",""],["sys_line_system_control_fighter_hook_skyline_internal_original_fn",""]]});
